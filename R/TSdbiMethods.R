@@ -6,6 +6,9 @@
 
 setClass("TSSQLiteConnection", contains=c("SQLiteConnection","conType", "TSdb")) 
 
+#setAs("TSSQLiteConnection", "integer", 
+#  def=getMethod("coerce", c("dbObjectId","integer"))) 
+
 setMethod("print", "TSSQLiteConnection", function(x, ...) {
     print(x@TSdb)
     })
@@ -74,7 +77,7 @@ setMethod("TSvintages",
    signature(con="TSSQLiteConnection"),
    definition=function(con) {
      if(!con@hasVintages) NULL else   
-     dbGetQuery(con,"SELECT  DISTINCT(vintage) FROM  vintages;" )$vintage
+     sort(dbGetQuery(con,"SELECT  DISTINCT(vintage) FROM  vintages;" )$vintage)
      } )
 
 setMethod("dropTStable", 

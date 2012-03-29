@@ -1,10 +1,10 @@
-77d182d917ee4faade0bf0ddd06bede0 *DESCRIPTION
+8aaf8598a3cf4c3a7e50c5562d267c81 *DESCRIPTION
 ddd24cfff8eca7b2b77a83a5b5b14ea5 *LICENSE
 8a896c9bddd51f6b23caede46a593817 *NAMESPACE
-8433a2b354a817c9ef6790207b3bde68 *NEWS
-b518b137136adfaffeb78ba758e4b8d1 *R/TSdbiMethods.R
-8284eb32f87e9461e771c9f7545180ce *inst/doc/Guide.Stex
-aff520b24e3b1d13b0740133d816307d *inst/doc/Guide.pdf
+90680d636e4d349b71808d7844809da4 *NEWS
+554e512c65ae01d09d1521d71bf9d3cc *R/TSdbiMethods.R
+160741351a5e6cfe001054d01fccc9b8 *inst/doc/Guide.pdf
 4baa0b8b3ee528ddf5a415e85656dc82 *man/TSdbiMethods.Rd
 fd8fa95b0cc3790581e09691a5563bc5 *tests/0serviceCheck.R
 6d833440eab7c1d3143de7a0f0ad8218 *tests/RSQLite.R
+8284eb32f87e9461e771c9f7545180ce *vignettes/Guide.Stex
