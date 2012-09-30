@@ -1,9 +1,9 @@
-e4e26178b6daff0566ab9ef19e905db3 *DESCRIPTION
+b1238d1925e86bc838ccfdaee26effa6 *DESCRIPTION
 8a896c9bddd51f6b23caede46a593817 *NAMESPACE
-227161a37252d7595ed311385fb8a66d *NEWS
+e4c0474fdc957510f24830ea33ee4cff *NEWS
 889d3171295d2978357e5a8d050eac82 *R/TSdbiMethods.R
-efe6899e43daaa606626c650d8ce46b3 *inst/doc/Guide.pdf
+ea2b53141cae7bb8725a6b48cb43e5b5 *inst/doc/Guide.pdf
 6b321607c9bd2d5dc6d0f605697dd340 *man/TSdbiMethods.Rd
 fd8fa95b0cc3790581e09691a5563bc5 *tests/0serviceCheck.R
 6d833440eab7c1d3143de7a0f0ad8218 *tests/RSQLite.R
-9ac11e5017e6bf73f8049b7a9ea84e08 *vignettes/Guide.Stex
+82205ff53a481063b9d7008e93f12ef5 *vignettes/Guide.Stex
