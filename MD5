@@ -1,9 +1,11 @@
-b1238d1925e86bc838ccfdaee26effa6 *DESCRIPTION
-8a896c9bddd51f6b23caede46a593817 *NAMESPACE
-e4c0474fdc957510f24830ea33ee4cff *NEWS
-889d3171295d2978357e5a8d050eac82 *R/TSdbiMethods.R
+1d723821aaf99769ebb8c00c10393383 *DESCRIPTION
+72855e852bd35d7ae51b4a0d2039a7c6 *NAMESPACE
+1fb931da3bbd58a76bb0f40bfe7f65da *NEWS
+b35e9cbb3b966cc094a027d89213d205 *R/TSdbiMethods.R
+0a0baaf1d8106467dcbafda751b39279 *build/vignette.rds
+82205ff53a481063b9d7008e93f12ef5 *inst/doc/Guide.Stex
 ea2b53141cae7bb8725a6b48cb43e5b5 *inst/doc/Guide.pdf
-6b321607c9bd2d5dc6d0f605697dd340 *man/TSdbiMethods.Rd
+092415ddb3dbaa022fea9b61dc8dd02f *man/TSdbiMethods.Rd
 fd8fa95b0cc3790581e09691a5563bc5 *tests/0serviceCheck.R
-6d833440eab7c1d3143de7a0f0ad8218 *tests/RSQLite.R
+4872732147374d77d12fd45abe382f9e *tests/RSQLite.R
 82205ff53a481063b9d7008e93f12ef5 *vignettes/Guide.Stex
