@@ -1,5 +1,7 @@
 \name{TSdbiMethods}
-\alias{TSconnect,SQLiteDriver,character-method}
+\alias{SQLite}
+
+\alias{TSconnect,SQLiteConnection,missing-method}
 \alias{TSget,character,TSSQLiteConnection-method}
 \alias{TSput,ANY,character,TSSQLiteConnection-method}
 \alias{TSdelete,character,TSSQLiteConnection-method}
@@ -10,15 +12,14 @@
 \alias{TSdates,character,TSSQLiteConnection-method}
 \alias{TSvintages,TSSQLiteConnection-method}
 \alias{print,TSSQLiteConnection-method}
-\alias{dropTStable,SQLiteConnection,character,ANY-method}
-\alias{dropTStable,SQLiteConnection,character-method}
 
 \alias{TSSQLiteConnection-class}
 
 \title{TSdbi SQLite Methods}
 \description{Methods for TSdbi SQLite time series dtabase connection.}
 \usage{
-    \S4method{TSconnect}{SQLiteDriver,character}(drv, dbname, ...)
+    SQLite(...)
+    \S4method{TSconnect}{SQLiteConnection,missing}(q, dbname, ...)
     \S4method{TSget}{character,TSSQLiteConnection}(
 	serIDs, con, TSrepresentation=options()$TSrepresentation,
 	tf=NULL, start=tfstart(tf), end=tfend(tf), names=NULL, 
@@ -41,13 +42,13 @@
     \S4method{TSsource}{character,TSSQLiteConnection}(x, con, ...)
     \S4method{TSvintages}{TSSQLiteConnection}(con)
     \S4method{print}{TSSQLiteConnection}(x, ...)
-    \S4method{dropTStable}{SQLiteConnection,character,ANY}(con, Table, 
-                           yesIknowWhatIamDoing=FALSE)
 }
 \arguments{
-    \item{drv}{A SQLiteDriver.}
-    \item{dbname}{A character string indicating a database name.}
-    \item{con}{A database connection.}
+    \item{q}{A character string indicating the query interface to use, or
+         a database connection object.}
+    \item{dbname}{The name of the database to which the connection should be
+         established, omitted if \code{q} is a database connection object.}
+    \item{con}{A database connection object.}
     \item{serIDs}{identifiers for series to extract.}
     \item{x}{data series to put on the database, or a series identifier for
        TSdescription and TSdoc or, for print, 
@@ -73,7 +74,6 @@
     	necessary if it cannot be determined automatically).}
     \item{vintage}{Vintage to be supplied (if supported by db).}
     \item{panel}{Panel to be supplied (if supported by db).}
-    \item{yesIknowWhatIamDoing}{logical to help prevent accidents.}
     \item{...}{Arguments passed to other methods.}
 }
 \value{depends.}
@@ -94,56 +94,41 @@ will not be removed. These steps are done in the example below.
 }
 \examples{
     require("tfplot")
-    conInit <- try(TSconnect(dbDriver("SQLite"), dbname="test"))
-    if(! inherits(conInit, "try-error")) {
-      require("TSsql")
-      createTSdbTables(conInit, index=FALSE)
-      con <- TSconnect("SQLite", dbname="test")
-      z <- ts(rnorm(100), start=c(1975,1), frequency=12)
-      seriesNames(z) <- "random1"
-      if(TSexists("random1", con)) TSreplace(z, con) else
-      TSput(z, con)
-      z1 <- TSget("random1", con)
-      tfplot(z1)
-      z <- ts(matrix(rnorm(100),50,2), start=c(1975,1), frequency=4)
-      seriesNames(z) <- c("random2","random3")
-      if(TSexists("random2", con) |
-         TSexists("random3", con) ) TSreplace(z, con) else
-      TSput(z, con)
-      z2 <- TSget("random2", con)
-      tfplot(z2)
-      TSdates("D1", con)
-      TSdates("random2", con)
-      TSdates(c("random1","random2","random3"), con)
-      TSmeta("random2", con)
-      options(TSconnection=con)
-      z2 <- TSget(c("random2","random3"))
-      z <- TSdates(c("D1","random2","random3"))
-      print(z)
-      TSmeta("random2")
-      TSdelete("random1", con)
-      TSdelete("random2")
-       \dontshow{removeTSdbTables(con, yesIknowWhatIamDoing=TRUE)} 
-      }
-    con <- try(TSconnect(dbDriver("SQLite"), dbname="ets"))
-    if(! inherits(con, "try-error")) {
-      TSmeta("B103", con)
-      z1 <- TSget("B103", con)
-      tfplot(z1)
-      z2 <- TSget(c("B103", "B104"), con)
-      tfplot(z2)
-      options(TSconnection=con)
-      TSmeta("B103")
-      z2 <- TSget(c("B103","B104"))
-      TSmeta(z2)
-      TSdates("D1", con)
-      TSdates("B103", con)
-      TSdates(c("D1","B103","B104"), con)
-      z <- TSdates(c("D1","B103","B104"))
-      print(z)
-      start(z)
-      end(z)
-      }
+    dbfile <- tempfile()
+    setup <- RSQLite::dbConnect(RSQLite::SQLite(), dbname=dbfile)
+    TSsql::createTSdbTables(setup, index=FALSE)
+    
+    con <- TSconnect("SQLite", dbname=dbfile)
+
+    z <- ts(rnorm(100), start=c(1975,1), frequency=12)
+    seriesNames(z) <- "random1"
+    if(TSexists("random1", con)) TSreplace(z, con) else
+    TSput(z, con)
+    z1 <- TSget("random1", con)
+    tfplot(z1)
+
+    z <- ts(matrix(rnorm(100),50,2), start=c(1975,1), frequency=4)
+    seriesNames(z) <- c("random2","random3")
+    if(TSexists("random2", con) |
+       TSexists("random3", con) ) TSreplace(z, con) else
+    TSput(z, con)
+
+    z2 <- TSget("random2", con)
+    tfplot(z2)
+    TSdates("D1", con)
+    TSdates("random2", con)
+    TSdates(c("random1","random2","random3"), con)
+    TSmeta("random2", con)
+
+    options(TSconnection=con)
+    z2 <- TSget(c("random2","random3"))
+    z <- TSdates(c("D1","random2","random3"))
+    print(z)
+    TSmeta("random2")
+    TSdelete("random1", con)
+    TSdelete("random2")
+    
+    unlink(dbfile)
 }
 \keyword{ts}
 

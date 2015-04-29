@@ -1,21 +1,31 @@
+SQLite <- function(...){
+  args <- pmatch(names(list(...)), names(formals(RSQLite::SQLite)) )
+  do.call(RSQLite::SQLite, list(...)[!is.na(args)])
+  }
 
 setClass("TSSQLiteConnection", contains=c("SQLiteConnection","conType", "TSdb")) 
 
 #setAs("TSSQLiteConnection", "integer", 
 #  def=getMethod("coerce", c("dbObjectId","integer"))) 
 
+setGeneric("print")
+
 setMethod("print", "TSSQLiteConnection", function(x, ...) {
     print(x@TSdb)
     })
 
-setMethod("TSconnect",   signature(drv="SQLiteDriver", dbname="character"),
-   definition=function(drv, dbname, ...) {
-        con <- dbConnect(drv, dbname=dbname, ...)
-	if(!dbExistsTable(con, "Meta"))
+#class(getExportedValue("RSQLite", "SQLite")()) is "SQLiteDriver"
+
+setMethod("TSconnect",   signature(q="SQLiteConnection", dbname="missing"),
+   definition=function(q, dbname, ...) {
+        con <- q
+	if(!dbExistsTable(conn=con, "Meta"))
 	  stop("The database does not appear to be a TS database,")
-	new("TSSQLiteConnection" , con, drv="SQLite", dbname=dbname, 
-	       hasVintages=dbExistsTable(con, "vintageAlias"), 
-	       hasPanels  =dbExistsTable(con, "panels"))
+	nm <- dbGetQuery(con, "PRAGMA database_list;")
+	nm <- nm$file["main" == nm$name]
+	new("TSSQLiteConnection" , con, dbname=nm, 
+	       hasVintages=dbExistsTable(conn=con, "vintageAlias"), 
+	       hasPanels  =dbExistsTable(conn=con, "panels"))
 	})
 
 setMethod("TSput", signature(x="ANY", serIDs="character", con="TSSQLiteConnection"),
@@ -74,12 +84,3 @@ setMethod("TSvintages",
      if(!con@hasVintages) NULL else   
      sort(dbGetQuery(con,"SELECT  DISTINCT(vintage) FROM  vintages;" )$vintage)
      } )
-
-setMethod("dropTStable", 
-   signature(con="SQLiteConnection", Table="character", yesIknowWhatIamDoing="ANY"),
-   definition= function(con=NULL, Table, yesIknowWhatIamDoing=FALSE){
-    if((!is.logical(yesIknowWhatIamDoing)) || !yesIknowWhatIamDoing)
-      stop("See ?dropTStable! You need to know that you may be doing serious damage.")
-    if(dbExistsTable(con, Table)) dbRemoveTable(con, Table)
-    return(TRUE)
-    } )
